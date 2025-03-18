@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clima e Tempo</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Pesquise o clima atual e a previsão para os próximos dias</h1>
+        <input type="text" id="location" placeholder="Digite a cidade">
+        <button onclick="getWeather()">Buscar</button>
+        <div class="result-container">
+            <div id="weather-info" class="current-weather"></div>
+            <div id="forecast-info" class="forecast"></div>
+        </div>
+        <div id="carousel-container">
+            <h3>Imagens da cidade</h3>
+            <div id="image-carousel"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        const input = document.getElementById("location");
+        input.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                getWeather();
+            }
+        });
+    </script>
+</body>
+</html>
