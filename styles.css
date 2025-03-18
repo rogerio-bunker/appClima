@@ -148,6 +148,19 @@ button:hover {
     transition: opacity 0.5s;
 }
 
+footer {
+    margin-top: auto;
+    padding: 15px 0;
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    width: 100%;
+    text-align: center;
+    font-size: 0.9rem;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+}
+
 /* Responsivo */
 @media (max-width: 700px) {
     .result-container {
