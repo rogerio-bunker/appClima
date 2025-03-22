@@ -1,31 +1,42 @@
+const API_KEYS = {
+    weather: 'b8223de9539d8288beb3bc4a73ced647',
+    unsplash: 'ykqgAYvowygHI5mZzgH1wGA1kigu1qKKV22tFYYv_0E'
+};
+
+let carouselInterval;
+
+document.getElementById('weather-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    getWeather();
+});
+
 async function getWeather() {
     const location = document.getElementById('location').value.trim();
     const weatherInfo = document.getElementById('weather-info');
     const forecastInfo = document.getElementById('forecast-info');
     const carouselContainer = document.getElementById('image-carousel');
+    const loading = document.getElementById('loading');
 
     if (!location) {
-        weatherInfo.innerHTML = "<p style='color: red;'>Por favor, digite uma cidade!</p>";
+        weatherInfo.innerHTML = "<p class='error-message'>Por favor, digite uma cidade!</p>";
         forecastInfo.innerHTML = "";
         carouselContainer.innerHTML = "";
         return;
     }
 
-    const apiKey = 'b8223de9539d8288beb3bc4a73ced647'; // sua chave OpenWeather
-const unsplashKey = 'ykqgAYvowygHI5mZzgH1wGA1kigu1qKKV22tFYYv_0E';
-
-    const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(location)}&appid=${apiKey}&units=metric&lang=pt`;
-    const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(location)}&appid=${apiKey}&units=metric&lang=pt`;
-    const unsplashUrl = `https://api.unsplash.com/search/photos?query=${encodeURIComponent(location)}&client_id=${unsplashKey}&per_page=5`;
+    const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(location)}&appid=${API_KEYS.weather}&units=metric&lang=pt`;
+    const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(location)}&appid=${API_KEYS.weather}&units=metric&lang=pt`;
+    const unsplashUrl = `https://api.unsplash.com/search/photos?query=${encodeURIComponent(location)}&client_id=${API_KEYS.unsplash}&per_page=5`;
 
     try {
-        weatherInfo.innerHTML = "<p>Carregando dados do clima...</p>";
+        loading.style.display = 'block';
+        weatherInfo.innerHTML = "";
         forecastInfo.innerHTML = "";
         carouselContainer.innerHTML = "";
 
         // Clima atual
         const response = await fetch(weatherUrl);
-        if (!response.ok) throw new Error('Localização não encontrada');
+        if (!response.ok) throw new Error('Cidade não encontrada!');
         const data = await response.json();
 
         const weatherDescription = data.weather[0].description;
@@ -74,28 +85,25 @@ const unsplashKey = 'ykqgAYvowygHI5mZzgH1wGA1kigu1qKKV22tFYYv_0E';
         const unsplashData = await unsplashResponse.json();
 
         if (unsplashData.results && unsplashData.results.length > 0) {
-            let carouselHTML = '<div class="carousel">';
+            let carouselHTML = '';
             unsplashData.results.forEach((photo, index) => {
-                carouselHTML += `<img src="${photo.urls.regular}" alt="${location}" class="carousel-image">`;
+                carouselHTML += `<img src="${photo.urls.regular}" alt="${location}" class="carousel-image${index === 0 ? ' active' : ''}">`;
 
-                // Atualiza o background com a primeira imagem
                 if (index === 0) {
                     document.body.style.backgroundImage = `url('${photo.urls.regular}')`;
-                    document.body.style.backgroundSize = 'cover';
-                    document.body.style.backgroundPosition = 'center';
-                    document.body.style.backgroundRepeat = 'no-repeat';
                 }
             });
-            carouselHTML += '</div>';
             carouselContainer.innerHTML = carouselHTML;
 
             initCarousel();
         }
 
     } catch (error) {
-        weatherInfo.innerHTML = `<p style='color: red;'>Erro: ${error.message}</p>`;
+        weatherInfo.innerHTML = `<p class='error-message'>${error.message}</p>`;
         forecastInfo.innerHTML = "";
         carouselContainer.innerHTML = "";
+    } finally {
+        loading.style.display = 'none';
     }
 }
 
@@ -103,20 +111,22 @@ function initCarousel() {
     const images = document.querySelectorAll('.carousel-image');
     let current = 0;
 
-    images.forEach((img, index) => {
-        img.style.display = index === 0 ? 'block' : 'none';
+    images.forEach((img, i) => {
+        img.classList.remove('active');
     });
+    images[0].classList.add('active');
 
-    setInterval(() => {
-        images[current].style.display = 'none';
+    if (carouselInterval) clearInterval(carouselInterval);
+
+    carouselInterval = setInterval(() => {
+        images[current].classList.remove('active');
         current = (current + 1) % images.length;
-        images[current].style.display = 'block';
+        images[current].classList.add('active');
     }, 3000);
 }
 
 async function setRandomBackground() {
-    const unsplashKey = 'ykqgAYvowygHI5mZzgH1wGA1kigu1qKKV22tFYYv_0E';
-    const unsplashUrl = `https://api.unsplash.com/photos/random?query=nature&client_id=${unsplashKey}`;
+    const unsplashUrl = `https://api.unsplash.com/photos/random?query=nature&client_id=${API_KEYS.unsplash}`;
 
     try {
         const response = await fetch(unsplashUrl);
@@ -124,9 +134,6 @@ async function setRandomBackground() {
 
         if (data.urls && data.urls.regular) {
             document.body.style.backgroundImage = `url('${data.urls.regular}')`;
-            document.body.style.backgroundSize = 'cover';
-            document.body.style.backgroundPosition = 'center';
-            document.body.style.backgroundRepeat = 'no-repeat';
         }
     } catch (error) {
         console.error("Erro ao carregar imagem de fundo:", error);

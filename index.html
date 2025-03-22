@@ -1,23 +1,31 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Clima e Tempo</title>
-    <link rel="stylesheet" href="styles.css">
+    <meta name="description" content="Descubra o clima atual e a previsão para os próximos dias em qualquer cidade do mundo.">
+    <meta name="author" content="Sérgio Rogério">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
     <div class="container">
         <h1>Pesquise o clima atual e a previsão para os próximos dias</h1>
-        <input type="text" id="location" placeholder="Digite a cidade">
-        <button onclick="getWeather()">Buscar</button>
+        <form id="weather-form">
+            <label for="location" class="visually-hidden">Cidade:</label>
+            <input type="text" id="location" placeholder="Digite a cidade" />
+            <button type="submit">Buscar</button>
+            <button id="reset-btn" class="reset-btn" style="display:none;" type="button">Nova Pesquisa</button>
+        </form>
+        <div id="loading" class="loading">Carregando...</div>
         <div class="result-container">
             <div id="weather-info" class="current-weather"></div>
             <div id="forecast-info" class="forecast"></div>
         </div>
         <div id="carousel-container">
             <h3>Imagens da cidade</h3>
-            <div id="image-carousel"></div>
+            <div id="image-carousel" class="carousel"></div>
         </div>
     </div>
 
@@ -26,13 +34,5 @@
     </footer>
 
     <script src="script.js"></script>
-    <script>
-        const input = document.getElementById("location");
-        input.addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                getWeather();
-            }
-        });
-    </script>
 </body>
 </html>

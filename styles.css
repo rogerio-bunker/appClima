@@ -1,4 +1,3 @@
-/* Reset básico */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -8,8 +7,6 @@
 html, body {
     height: 100%;
     width: 100%;
-    margin: 0;
-    padding: 0;
 }
 
 body {
@@ -23,55 +20,72 @@ body {
     overflow-x: hidden;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+    position: relative;
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.4);
+    z-index: -1;
 }
 
 .container {
     padding: 20px;
     background: rgba(221, 219, 219, 0.75);
-    display: inline-block;
     border-radius: 15px;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.2);
     max-width: 850px;
     width: 95%;
     text-align: center;
+    margin-top: 20px;
+}
+
+input, button, .reset-btn {
+    padding: 12px;
+    width: 90%;
+    max-width: 300px;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-top: 10px;
 }
 
 input {
-    padding: 10px;
-    width: 100%;
-    max-width: 250px;
     border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-    margin-top: 10px;
 }
 
 button {
-    padding: 12px;
     background-color: #007BFF;
     color: white;
     border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    margin-top: 10px;
-    width: 100%;
-    max-width: 150px;
-    transition: background 0.3s;
+    transition: background 0.3s, transform 0.2s;
 }
 
 button:hover {
     background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+.reset-btn {
+    background-color: #28a745;
+    border: none;
+    color: white;
+}
+
+.reset-btn:hover {
+    background-color: #218838;
+    transform: scale(1.05);
 }
 
 .result-container {
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
+    flex-direction: column;
+    align-items: center;
     gap: 20px;
-    flex-wrap: wrap;
     margin-top: 20px;
 }
 
@@ -80,7 +94,8 @@ button:hover {
     backdrop-filter: blur(10px);
     border-radius: 15px;
     padding: 20px;
-    width: 300px;
+    width: 95%;
+    max-width: 350px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease;
 }
@@ -111,46 +126,53 @@ button:hover {
     padding: 12px;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    transition: background 0.3s, transform 0.3s;
 }
 
-.forecast div:hover {
-    background-color: rgba(255, 255, 255, 0.4);
-}
-
-/* Carrossel de imagens */
 #carousel-container {
     margin-top: 25px;
+    width: 100%;
     max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-#carousel-container h3 {
-    margin-bottom: 10px;
 }
 
 .carousel {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
+    position: relative;
     width: 100%;
+    height: auto;
     border-radius: 12px;
+    overflow: hidden;
 }
 
 .carousel img {
     width: 100%;
-    height: 400px;
+    max-height: 300px;
     object-fit: cover;
-    display: none;
     border-radius: 12px;
-    transition: opacity 0.5s;
+    opacity: 0;
+    transition: opacity 0.8s ease-in-out;
+    position: absolute;
+}
+
+.carousel img.active {
+    opacity: 1;
+    position: relative;
+}
+
+.error-message {
+    color: red;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.loading {
+    display: none;
+    margin-top: 15px;
+    font-style: italic;
+    color: #333;
 }
 
 footer {
     margin-top: auto;
-    padding: 15px 0;
+    padding: 15px 5;
     background: rgba(0, 0, 0, 0.7);
     color: #fff;
     width: 100%;
@@ -161,10 +183,10 @@ footer {
     left: 0;
 }
 
-/* Responsivo */
-@media (max-width: 700px) {
-    .result-container {
-        flex-direction: column;
-        align-items: center;
-    }
+.visually-hidden {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
 }
